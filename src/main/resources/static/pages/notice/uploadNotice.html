@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+</head>
+<body style="padding: 0px;width:100%;">
+
+<table style="width:100%;height:600px;">  
+   <tr style="height:100%;">
+       <td style="height:100%;width:50%;"><table id="datagrid" style="height:100%;width:100%;"></table></td>  
+       <td style="height:100%;width:50%;"><table id="datagridatt" style="height:100%;width:100%;"></table></td>  
+   </tr>    
+</table>  
+	<div id="dd"></div>
+	<div id="tb" style="padding: 5px;">
+		<div>
+			<a href="#" iconCls="icon-add" class="easyui-linkbutton" plain="true"
+				onclick="obj.add()">发布公告</a> <a href="#" iconCls="icon-edit"
+				class="easyui-linkbutton" plain="true" onclick="obj.edit()">修改公告</a>
+			<a href="#" iconCls="icon-remove" class="easyui-linkbutton"
+				plain="true" onclick="obj.remove();">删除</a>
+			<a href="#" iconCls="icon-upload" class="easyui-linkbutton"
+				plain="true" onclick="obj.uploadAttactment();">上传附件</a>
+		</div>
+
+		<div style="padding: 5px;">
+			公告主题：<input type="text" name="title" class="textbox" />
+			<button iconCls="icon-search" onclick="obj.search()"
+				class="easyui-linkbutton" style="height: 26px;">查询</button>
+		</div>
+	</div> 
+	<!-- 附件删除 -->
+	<div id="tb2" style="padding: 5px;">
+	    <a href="#" iconCls="icon-remove" class="easyui-linkbutton" plain="true" onclick="removeAtt();">删除</a>
+	</div>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../js/uploadNotice.js"></script>
+<!-- <script type="text/javascript" src="../../js/attactment.js"></script> --> 
+</html>

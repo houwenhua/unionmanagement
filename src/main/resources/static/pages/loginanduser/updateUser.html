@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<style>
+*{
+   margin:0;
+   padding:0;
+}
+</style>
+</head>
+<body>
+	<div id="form1" style="width: 400px; margin: 0px auto;">
+		<div style="padding: 10px 0 10px 60px;">
+			<form id="ff" method="post">
+				<table style="border-collapse: separate; border-spacing: 0px 10px;">
+					<tr style="display: none;">
+						<td>id:</td>
+						<td><input type="hidden" name="id" id="id"></input></td>
+					</tr>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="name" name="name" class="easyui-validatebox textbox"
+							data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>用户名:</td>
+						<td><input id="loginname" name="loginname"
+							class="easyui-validatebox textbox" data-options="required:true,editable:false"></input></td>
+					    <td>用户名不可修改！！</td>
+					</tr>
+					<tr>
+						<td>密码:</td>
+						<td><input id="password" name="password"
+							class="easyui-validatebox textbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>权限名:</td>
+						<td><input id="jurisdiction" name="jurisdiction"
+							class="textbox"
+							data-options="required:true"></input></td>
+					</tr>
+						<tr>
+						<td>所属学院:</td>
+						<td><input id="institute" name="institute"
+							class="textbox"
+							data-options="required:true"></input></td>
+					</tr>
+					<!-- <tr>
+						<td>电话号码:</td>
+						<td><input id="phone" name="phone"
+							class="easyui-numberbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>邮箱:</td>
+						<td><input id="email" name="email"
+							class="easyui-validatebox textbox" data-options="required:true,validType:'email'"></input></td>
+					</tr>
+					<tr>
+						<td>地址:</td>
+						<td><input id="address" name="address"
+							class="easyui-validatebox textbox" data-options="required:false"></input></td>
+					</tr> -->
+				</table>
+			</form>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script>
+function getQueryString(name) { 
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); 
+    return null; 
+} 
+var id = getQueryString("id");
+$("#id").val(getQueryString("id"));
+
+$.ajax({
+    url : '/SysUserController/queryUser',
+    type : 'POST',
+    data : {
+        id : id,
+    },
+    dataType : 'json',
+    success : function(data) {
+       var tempData = data;
+       $("#name").val(data.name);
+       $("#loginname").val(data.loginname);
+       $("#password").val(data.password);
+       $("#phone").textbox('setValue',data.phone);
+       $("#email").val(data.email);
+       $("#address").val(data.address);
+       
+     //加载学院下拉框
+       $('#jurisdiction').combobox({
+       	editable:false,
+       	url:'/SysUserController/getJurisdiction',
+       	valueField: 'grade',    
+           textField: 'name',
+           onLoadSuccess: function () { 
+           	var data = $('#jurisdiction').combobox('getData');
+           	if (data.length > 0) {
+           		for(var i = 0;i<data.length;i++){
+           			if(data[i].name==tempData.jurisdiction){
+           			 $('#jurisdiction').combobox('select', data[i].grade);
+           			}
+           		}
+               }              
+          }
+       });
+
+       //加载所属权限下拉框
+       $('#institute').combobox({
+       	editable:false,
+       	url:'/SysUserController/getInstituteName',
+       	valueField: 'InstituteId',    
+           textField: 'InstituteName',
+           onLoadSuccess: function () { 
+           	var data = $('#institute').combobox('getData');
+           	if (data.length > 0) {
+           		for(var i = 0;i<data.length;i++){
+           			if(data[i].InstituteName==tempData.institute){
+           				$('#institute').combobox('select', data[i].InstituteId);
+           			}
+           		}
+               }              
+          }
+       });
+    }
+});
+
+
+function submitForm(){
+	$('#ff').form('submit',{
+		url:'/SysUserController/updateUser',
+		onSubmit:function(param){
+			return $(this).form('validate');
+		},  
+		success:function(data){
+			parent.$('#dd').window('close');
+			resultMsg(data);
+			parent.reloaddatagrid();
+		}
+	});
+}
+
+</script>
+</html>

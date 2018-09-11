@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<link rel="stylesheet" type="text/css" href="themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="themes/icon.css">
+<link rel="stylesheet" type="text/css" href="css/demo.css">
+<link rel="stylesheet" type="text/css" href="css/login.css">
+</head>
+<body style="background-img:url('back.jpg')">
+	<div id="login">
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;账户：<input type="text" id="loginname" class="textbox" name="loginname" style="width:160px;height:25px;"></p>
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码：<input type="password" id="pwd" class="textbox" name="pwd" style="width:160px;height:25px;"></p>
+		<p>选择权限：<input id="jurisdiction" name="jurisdiction" class="textbox" data-options="required:true" style="width:160px;height:25px;"></input></p>
+	</div>
+	<div id="btn">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登录</a>
+		<a href="#" class="easyui-linkbutton" onclick="clearAll()" data-options="iconCls:'icon-undo'">重置</a>
+	</div>
+</body>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<script>
+	function clearAll(){
+		document.getElementById("loginname").value="";
+		document.getElementById("pwd").value="";
+		$("#loginname").focus();
+	}
+	//加载下拉框 页面加载时执行
+	$('#jurisdiction').combobox({
+		editable:false,
+		url:'/SysUserController/getJurisdiction',
+		valueField: 'name',   //实际值 
+	    textField: 'name',//展示值
+	    onLoadSuccess: function () { 
+	    	var data = $('#jurisdiction').combobox('getData');
+	    	if (data.length > 0) {
+	            $('#jurisdiction').combobox('select', data[0].name);
+	        }              
+	   }
+	});
+	
+	//解决session过期后登陆页面嵌套在自框架中的问题。
+	if(top != window){
+		top.location.href = window.location.href;
+	}
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>公告详情</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.header1 {
+	margin: 0 auto;
+	width: 100%;
+	height: 100px;
+	background-image: url("../../img/noticeHeader.jpg");
+	background-size: 100% 100%;
+	font-size: 40px;
+	color: black;
+	font-family: 宋体;
+	text-align: center;
+	line-height: 100px;
+}
+
+.content {
+	margin: 0 auto;
+	width: 100%;
+	height: 450px;
+	box-sizing: border-box;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+.header2 {
+	margin: 0 auto;
+	width: 100%;
+	height: 10%;
+	text-align: center;
+	border-bottom: 1px dashed black;
+}
+
+.readCount {
+	margin: 0 auto;
+	width: 100%;
+	height: 10%;
+	border-bottom: 1px dashed black;
+}
+
+.ulRead li {
+	display: inline-block;
+	float: right;
+	list-style: none;
+	padding-right: 50px;
+}
+
+.ulRead .liRead {
+	float: left;
+}
+
+.substance {
+	margin: 0 auto;
+	width: 100%;
+	height: 60%;
+}
+.footer{
+    margin: 0 auto;
+	width: 100%;
+	height: 30%;
+	border-top:2px solid black;
+}
+</style>
+</head>
+<body>
+	<div id="header1" class="header1">攀枝花学院工会公告</div>
+	<div id="content" class="content">
+		<div id="header2" class="header2">
+			标题： <input class="easyui-textbox" style="width: 300px" id="title" name="title">
+			<!-- <select id="type" name="type">
+			   <option>比赛活动</option>
+			   <option>工会活动</option>
+			</select> -->
+			<select class="easyui-combobox" id="type" name="type" style="width: 200px;">
+			   <option value="比赛活动">比赛活动</option>
+			   <option value="工会活动">工会活动</option>
+			</select>
+		</div>
+		<div id="substance" class="substance">内容
+			<textarea id="mcontent" name="mcontent" class="maincontent" style="width:100%;height:93%;"></textarea>
+		</div>
+		<!-- <div class="footer">
+		附件上传：<input class="easyui-filebox" style="width:300px">
+		</div> -->
+	</div>
+</body>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script>
+function addNotice(){
+	$.ajax({
+		url : '/NoticeController/addNotice',
+		type : 'POST',
+		data : {
+			title : $("#title").val(),
+			mcontent: $("#mcontent").val(),
+			type : $("#type").combobox('getValue')
+		},
+		dataType : 'json',
+		success : function(data) {
+			if(data.success){
+				parent.$('#dd').window('close');
+				parent.reloaddatagrid();
+				parent.$.messager.show({
+					title:'提示',
+					msg:data.msg,
+				});
+			}else{
+				parent.$('#dd').window('close');
+				parent.$.messager.show({
+					title:'提示',
+					msg:data.msg,
+				});
+			}
+		}
+	});
+}
+	
+</script>
+</html>

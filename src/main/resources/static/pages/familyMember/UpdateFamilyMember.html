@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css"
+	href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<style>
+tr {
+	margin-top: 15px;
+}
+</style>
+</head>
+<body>
+	<div id="form1" style="width: 400px; margin: 0px auto;">
+		<div style="padding: 10px 0 10px 60px;">
+			<form id="ff" method="post">
+				<table style="border-collapse: separate; border-spacing: 0px 10px;">
+					<tr style="display: none;">
+						<td>id:</td>
+						<td><input type="hidden" name="id"></input></td>
+					</tr>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="name" name="name"
+							class="easyui-validatebox textbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>与本人关系:</td>
+						<td><input id="relationship" name="relationship"
+							class="easyui-validatebox textbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>政治面貌:</td>
+						<td><input id="policy" name="policy"
+							class="textbox easyui-validatebox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>所在单位:</td>
+						<td><input id="unit" name="unit"
+							class="textbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>职位:</td>
+						<td><input id="position" name="position" class="textbox"
+							data-options="required:true"></input></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+
+<script>
+function getQueryString(name) { 
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); 
+    return null; 
+} 
+
+//从数据库中获取信息
+var id = getQueryString("id");
+$("#id").val(getQueryString("id"));
+$.ajax({
+    url : '/FamilyMemberController/queryFamilyMember',
+    type : 'POST',
+    data : {
+        id : id,
+    },
+    dataType : 'json',
+    success : function(data) {
+       $('#name').val(data.name);
+       $('#relationship').val(data.relationship);
+       $('#policy').val(data.policy);
+       $('#unit').val(data.unit);
+       $('#position').val(data.position);
+    }
+});
+
+//更新数据库
+	function submitForm() {
+		$('#ff').form('submit', {
+			url : '/FamilyMemberController/update',
+			onSubmit : function(param) {
+				return $(this).form('validate');
+			},
+			success : function(data) {
+				parent.$('#dd').window('close');
+				resultMsg(data);
+				parent.reloaddatagrid();
+			}
+		});
+	}
+</script>
+</html>

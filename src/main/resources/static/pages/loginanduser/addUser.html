@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<style>
+*{
+   margin:0;
+   padding:0;
+}
+tr {
+	margin-top: 15px;
+}
+</style>
+</head>
+<body>
+	<div id="form1" style="width: 400px; margin: 0px auto;">
+		<div style="padding: 10px 0 10px 60px;">
+			<form id="ff" method="post">
+				<table style="border-collapse: separate; border-spacing: 0px 10px;">
+					<tr style="display: none;">
+						<td>id:</td>
+						<td><input type="hidden" name="id"></input></td>
+					</tr>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="name" name="name" class="easyui-validatebox textbox"
+							data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>用户名:</td>
+						<td><input id="loginname" name="loginname"
+							class="easyui-validatebox textbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>密码:</td>
+						<td><input id="password" name="password"
+							class="textbox" data-options="required:true" value="123456"></input></td>
+					</tr>
+					<tr>
+						<td>权限名:</td>
+						<td><input id="jurisdiction" name="jurisdiction"
+							class="textbox"
+							data-options="required:true"></input></td>
+					</tr>
+						<tr>
+						<td>所属学院:</td>
+						<td><input id="institute" name="institute"
+							class="textbox"
+							data-options="required:true"></input></td>
+					</tr>
+					<!-- <tr>
+						<td>电话号码:</td>
+						<td><input id="phone" name="phone" 
+							class="easyui-numberbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>邮箱:</td>
+						<td><input id="email" name="email"
+							class="easyui-validatebox textbox" data-options="required:true,validType:'email'"></input></td>
+					</tr>
+					<tr>
+						<td>地址:</td>
+						<td><input id="address" name="address"
+							class="easyui-validatebox textbox" data-options="required:false"></input></td>
+					</tr> -->
+				</table>
+			</form>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script>
+
+//加载所属权限下拉框
+$('#jurisdiction').combobox({
+	editable:false,
+	url:'/SysUserController/getJurisdiction',
+	valueField: 'grade',    
+    textField: 'name',
+    onLoadSuccess: function () { 
+    	var data = $('#jurisdiction').combobox('getData');
+    	if (data.length > 0) {
+            $('#jurisdiction').combobox('select', data[0].grade);
+        }              
+   }
+});
+
+//设置密码格式
+$("#password").validatebox({
+	required:true,
+	validType:'length[6,30]',
+	missingMessage:'请输入密码',
+	invalidmessage:'密码不能为空',
+}); 
+
+//加载学院下拉框
+$('#institute').combobox({
+	editable:false,
+	url:'/SysUserController/getInstituteName',
+	valueField: 'InstituteId',    
+    textField: 'InstituteName',
+    onLoadSuccess: function () { 
+    	var data = $('#institute').combobox('getData');
+    	if (data.length > 0) {
+            $('#institute').combobox('select', data[0].InstituteId);
+        }              
+   }
+});
+
+function submitForm(){
+	$('#ff').form('submit',{
+		url:'/SysUserController/addUser',
+		onSubmit:function(param){
+			return $(this).form('validate');
+		},  
+		success:function(data){
+			data = jQuery.parseJSON(data);
+			if(data.success){
+				parent.$.messager.show({
+					title:'提示',
+					msg:data.msg,
+				});
+				parent.reloaddatagrid();
+				parent.$('#dd').window('close');
+			}else{
+				parent.$.messager.alert('系统提示', data.msg, 'error');
+			}
+			
+		}
+	});
+}
+
+</script>
+</html>

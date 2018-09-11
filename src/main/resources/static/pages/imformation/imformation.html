@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<style>
+*{
+   margin:0;
+   padding:0;
+}
+</style>
+</head>
+<body>
+	<div id="form1" style="width: 450px; margin: 0px auto;">
+		<div style="padding: 10px 0 10px 60px;">
+			<form id="ff" method="post">
+				<table style="border-collapse: separate; border-spacing: 0px 10px;">
+					<tr style="display: none;">
+						<td>id:</td>
+						<td><input type="hidden" name="id" id="id"></input></td>
+					</tr>
+					<tr>
+						<td>姓名：</td>
+						<td><input id="name" name="name" class="easyui-validatebox textbox"
+							data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>用户名:</td>
+						<td><input id="loginname" name="loginname"
+							class="easyui-validatebox textbox" data-options="required:true,editable:false"></input></td>
+					    <td>用户名不可修改！！</td>
+					</tr>
+					
+					<tr>
+						<td>性别:</td>
+						<td><select name="sex" id="sex">
+						       <option value="男">男</option>
+						       <option value="女">女</option>
+						    </select>
+						</td>
+					</tr>
+					<tr>
+						<td>出生年月日:</td>
+						<td><input id="birthday" name="birthday"
+							class="easyui-datebox" data-options="required:false,editable:false"></input></td>
+					</tr>
+					<tr>
+						<td>电话号码:</td>
+						<td><input id="phone" name="phone"
+							class="easyui-numberbox" data-options="required:true"></input></td>
+					</tr>
+					<tr>
+						<td>邮箱:</td>
+						<td><input id="email" name="email"
+							class="easyui-validatebox textbox" data-options="required:true,validType:'email'"></input></td>
+					</tr>
+					<tr>
+						<td>政治面貌:</td>
+						<td><input id="policy" name="policy"
+							class="easyui-validatebox textbox" data-options="required:false"></input></td>
+					</tr>
+					
+					<tr>
+						<td>职称:</td>
+						<td><input id="position" name="position"
+							class="easyui-validatebox textbox" data-options="required:false"></input></td>
+					</tr>
+					
+					<tr>
+						<td>地址:</td>
+						<td><input id="address" name="address"
+							class="easyui-validatebox textbox" data-options="required:false"></input></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			
+		</div>
+		<button iconCls="icon-ok" onclick="submitForm();" class="easyui-linkbutton" style="margin-left:120px;">修改</button>
+	</div>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script>
+$.ajax({
+    url : '/SysUserController/querySysUser',
+    type : 'POST',
+    dataType : 'json',
+    success : function(data) {
+   
+       $("#id").val(data.id);
+       $("#name").val(data.name);
+       $("#loginname").val(data.loginname);
+       $("#password").val(data.password);
+       $("#phone").textbox('setValue',data.phone);
+       $("#email").val(data.email);
+       $("#address").val(data.address);
+       $("#sex").val(data.sex);
+       $("#birthday").datebox('setValue',data.birthday);
+       $("#policy").val(data.policy);
+       $("#position").val(data.position);
+       $("#address").val(data.address);
+    }
+});
+
+
+function submitForm(){
+	$('#ff').form('submit',{
+		url:'/SysUserController/updateSysUser',
+		onSubmit:function(param){
+			return $(this).form('validate');
+		},  
+		success:function(data){
+			var data = jQuery.parseJSON(data);
+			$.messager.show({
+				title:'提示',
+				msg:data.msg,
+			});
+		}
+	});
+}
+
+</script>
+</html>

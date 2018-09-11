@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>修改密码</title>
+<link rel="stylesheet" type="text/css"
+	href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+</head>
+<body>
+	 <form id="ff" method="post"> 
+		<table style="border-collapse: separate; border-spacing: 0px 10px; margin: 0 auto;">
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新&nbsp;&nbsp;密&nbsp;&nbsp;码：</td>
+				<td><input type="password" id="pwdone" class="textbox" name="pwdone" style="width:160px;height:25px;"></input></td>
+			</tr>
+			<tr>
+				<td>请再次输入密码:</td>
+				<td><input type="password" id="pwdtwo" class="textbox" name="pwdtwo" style="width:160px;height:25px;"></input></td>
+			</tr>
+		</table>
+	 </form> 
+	 <div style="margin-left:100px;">
+	     <button iconCls="icon-ok" onclick="submitForm();" class="easyui-linkbutton" style="height: 26px;">修改</button>
+	 </div>
+	 
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+$("#pwdone").validatebox({
+	required:true,
+	validType:'length[6,30]',
+	missingMessage:'管理员密码',
+	invalidmessage:'密码不能为空',
+}); 
+$("#pwdtwo").validatebox({
+	required:true,
+	validType:'length[6,30]',
+	missingMessage:'管理员密码',
+	invalidmessage:'密码不能为空',
+});
+function submitForm() {
+	//easyui-passwordbox
+	var one = $("#pwdone").val();
+	var two = $("#pwdtwo").val();
+	if(!$("#pwdone").validatebox('isValid')){
+		$("#pwdone").focus();
+	}else if(!$("#pwdtwo").validatebox('isValid')){
+		$("#pwdtwo").focus();
+	} else if(one == two){
+		$('#ff').form('submit', {
+			url : '/SysUserController/updatePwd',
+			onSubmit : function(param) {
+				return $(this).form('validate');
+			},
+			success : function(data) {
+				var data = jQuery.parseJSON(data);
+				$.messager.alert('提示',data.msg,'info',function(){
+					 parent.$('#maindd').window('close');
+				});
+			}
+		});
+	}else {
+		   parent.$.messager.alert('提示','密码不一致','error');
+	} 
+} 
+</script>
+</html>
